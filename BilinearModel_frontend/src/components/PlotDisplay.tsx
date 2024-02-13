@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ResponseData } from "../../apis/model.api";
 import { LineChart } from "@mui/x-charts";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
 
 interface PlotData {
 	bilinearModelData: ResponseData | null;
@@ -19,6 +19,22 @@ export const PlotDisplay: React.FC<PlotData> = ({ bilinearModelData }) => {
 	if (!bilinearModelData) {
 		setIsLoading(true);
 	}
+
+	const handleDownload = () => {
+		if (bilinearModelData) {
+			const { Y, timestamps } = bilinearModelData;
+			const csvContent = convertToCSV(Y, timestamps);
+			const encodedUri = encodeURI(csvContent);
+			const link = document.createElement("a");
+			link.setAttribute("href", encodedUri);
+			link.setAttribute("download", "data.csv");
+			document.body.appendChild(link); // Required for FF
+
+			link.click();
+			document.body.removeChild(link); // Clean up
+		}
+	};
+
 	return (
 		<Container>
 			{isLoading ? (
@@ -33,6 +49,13 @@ export const PlotDisplay: React.FC<PlotData> = ({ bilinearModelData }) => {
 							margin: "1rem",
 						}}
 					>
+						<Grid
+							item
+							xs={12}
+							sx={{ display: "flex", justifyContent: "flex-end" }}
+						>
+							<Button onClick={handleDownload}>Download CSV</Button>
+						</Grid>
 						<Grid item xs={12}>
 							<Typography
 								fontSize={"2rem"}
@@ -127,4 +150,19 @@ export const PlotDisplay: React.FC<PlotData> = ({ bilinearModelData }) => {
 			)}
 		</Container>
 	);
+};
+
+const convertToCSV = (Y: number[][], timestamps: number[]): string => {
+	let csvContent = "data:text/csv;charset=utf-8,Timestamps,";
+	csvContent += Y.map((_, i) => `Region_${i + 1}`).join(",") + "\n";
+
+	for (let j = 0; j < timestamps.length; j++) {
+		const row = [
+			timestamps[j].toString(),
+			...Y.map((region) => region[j].toString()),
+		];
+		csvContent += row.join(",") + "\n";
+	}
+
+	return csvContent;
 };
