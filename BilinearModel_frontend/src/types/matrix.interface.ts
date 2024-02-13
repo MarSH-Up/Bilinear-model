@@ -1,13 +1,16 @@
 export interface MatrixValues {
-	matrixA: string[][];
-	matrixB: string[][];
-	matrixC: string[][];
+	Matrix_A: string[][];
+	Matrix_B: string[][];
+	Matrix_C: string[][];
 }
 
 export interface MatrixErrors {
-	matrixA?: string;
-	matrixB?: string;
-	matrixC?: string;
+	Matrix_A?: string;
+	Matrix_B?: string;
+	Matrix_C?: string;
+	actionTime?: string;
+	restTime?: string;
+	cycles?: string;
 }
 
 export interface MatrixTypographyProps {

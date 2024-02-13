@@ -64,6 +64,7 @@ const FullScreen: React.FC = () => {
 					minHeight: "100vh",
 					background: Colors.lightGrey,
 					boxSizing: "border-box",
+					minWidth: "1050px",
 				}}
 			>
 				<Outlet />

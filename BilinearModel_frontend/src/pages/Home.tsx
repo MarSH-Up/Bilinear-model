@@ -1,19 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Tabs, Tab, Container } from "@mui/material";
 import { Colors } from "../design/theme";
 import HowTo from "../components/HowTo";
 import InputBilinear from "../components/InputBilinear";
-import PlotGenerator from "../components/PlotGenerator";
-import { LineChart } from "@mui/x-charts";
+
+import { ResponseData } from "../../apis/model.api";
+import { PlotDisplay } from "../components/PlotDisplay";
 export const Home: React.FC = () => {
 	const [value, setValue] = useState(0);
 
+	const [responseData, setResponseData] = useState<ResponseData | null>(null);
+
 	const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
+		if (newValue === 2 && responseData === null) {
+			alert(
+				"Please submit the bilinear model data before viewing the plot example."
+			);
+			return;
+		}
 		setValue(newValue);
 	};
+	const handleResponseData = (data: ResponseData) => {
+		setResponseData(data);
+	};
+
+	useEffect(() => {
+		console.log(`Current tab index is ${value}`);
+		if (value === 2) {
+			if (responseData === null) {
+				console.log("Fetching data for the bilinear model...");
+			}
+		}
+	}, [responseData, value]);
 
 	return (
-		<Container sx={{ width: "90%" }}>
+		<Container sx={{ width: "100%", minWidth: "1050px" }}>
 			<Box sx={{ borderBottom: 1, borderColor: "divider" }}>
 				<Tabs
 					value={value}
@@ -25,7 +46,7 @@ export const Home: React.FC = () => {
 						sx={{ fontFamily: "Nunito", color: Colors.primary.dark }}
 					/>
 					<Tab label="Bilinear Model" />
-					<Tab label="Plot example" />
+					<Tab label="Bilinear Model Data" />
 				</Tabs>
 			</Box>
 			{value === 0 && (
@@ -35,24 +56,15 @@ export const Home: React.FC = () => {
 			)}
 			{value === 1 && (
 				<Box sx={{ p: 3 }}>
-					<InputBilinear />
+					<InputBilinear
+						onResponseData={handleResponseData}
+						tabHandle={setValue}
+					/>
 				</Box>
 			)}
 			{value === 2 && (
 				<Box sx={{ p: 3 }}>
-					<PlotGenerator />
-					<>
-						<LineChart
-							xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-							series={[
-								{
-									data: [2, 5.5, 2, 8.5, 1.5, 5],
-								},
-							]}
-							width={500}
-							height={300}
-						/>
-					</>
+					<PlotDisplay bilinearModelData={responseData} />
 				</Box>
 			)}
 		</Container>
