@@ -93,10 +93,11 @@ def generateSignals(parameters: BilinearParameters):
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
     response = {
         "U_stimulus": U_stimulus.tolist(),
         "timestamps": timestamps.tolist(),
-        "Z": Z.tolist(),
+        "Z": Z.T.tolist(),
         "dq": dq.tolist(),
         "dh": dh.tolist(),
         "Y": Y.tolist(),

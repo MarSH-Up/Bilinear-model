@@ -25,7 +25,6 @@ export const Home: React.FC = () => {
 	};
 
 	useEffect(() => {
-		console.log(`Current tab index is ${value}`);
 		if (value === 2) {
 			if (responseData === null) {
 				console.log("Fetching data for the bilinear model...");

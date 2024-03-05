@@ -12,7 +12,7 @@ const FullScreen: React.FC = () => {
 			<AppBar
 				position="fixed"
 				sx={{
-					background: Colors.lightGrey,
+					background: Colors.white,
 					border: "none",
 					boxShadow: "none",
 					minHeight: "5rem",
@@ -62,7 +62,7 @@ const FullScreen: React.FC = () => {
 				sx={{
 					pt: "7rem",
 					minHeight: "100vh",
-					background: Colors.lightGrey,
+					background: Colors.white,
 					boxSizing: "border-box",
 					minWidth: "1050px",
 				}}

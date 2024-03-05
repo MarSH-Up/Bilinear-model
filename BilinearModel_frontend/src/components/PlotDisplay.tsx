@@ -15,11 +15,30 @@ export const PlotDisplay: React.FC<PlotData> = ({ bilinearModelData }) => {
 				// eslint-disable-next-line no-mixed-spaces-and-tabs
 		  }))
 		: [];
-
+	const seriesZ = bilinearModelData
+		? bilinearModelData.Z.map((zData) => ({
+				data: zData,
+				showMark: false,
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+		  }))
+		: [];
+	const seriesDH = bilinearModelData
+		? bilinearModelData.dh.map((dhData) => ({
+				data: dhData,
+				showMark: false,
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+		  }))
+		: [];
+	const seriesDQ = bilinearModelData
+		? bilinearModelData.dq.map((dqData) => ({
+				data: dqData,
+				showMark: false,
+				// eslint-disable-next-line no-mixed-spaces-and-tabs
+		  }))
+		: [];
 	if (!bilinearModelData) {
 		setIsLoading(true);
 	}
-
 	const handleDownload = () => {
 		if (bilinearModelData) {
 			const { Y, timestamps } = bilinearModelData;
@@ -28,10 +47,10 @@ export const PlotDisplay: React.FC<PlotData> = ({ bilinearModelData }) => {
 			const link = document.createElement("a");
 			link.setAttribute("href", encodedUri);
 			link.setAttribute("download", "data.csv");
-			document.body.appendChild(link); // Required for FF
+			document.body.appendChild(link);
 
 			link.click();
-			document.body.removeChild(link); // Clean up
+			document.body.removeChild(link);
 		}
 	};
 
@@ -141,6 +160,40 @@ export const PlotDisplay: React.FC<PlotData> = ({ bilinearModelData }) => {
 							<LineChart
 								xAxis={[{ data: bilinearModelData?.timestamps }]}
 								series={series}
+								width={900}
+								height={600}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<Typography
+								fontSize={"2rem"}
+								textAlign="center"
+								sx={{ color: "#293937" }}
+							>
+								Neuronal Response
+							</Typography>
+						</Grid>
+						<Grid item xs={12}>
+							<LineChart
+								xAxis={[{ data: bilinearModelData?.timestamps }]}
+								series={seriesZ}
+								width={900}
+								height={600}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<Typography
+								fontSize={"2rem"}
+								textAlign="center"
+								sx={{ color: "#293937" }}
+							>
+								Hemodynamics Response
+							</Typography>
+						</Grid>
+						<Grid item xs={12}>
+							<LineChart
+								xAxis={[{ data: bilinearModelData?.timestamps }]}
+								series={[...seriesDH, ...seriesDQ]}
 								width={900}
 								height={600}
 							/>
