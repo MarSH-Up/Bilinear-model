@@ -312,12 +312,12 @@ const InputBilinear: React.FC<InputBilinearProps> = ({
 	);
 };
 
-const commonGridStyles = {
+export const commonGridStyles = {
 	border: `1px solid ${Colors.primary.dark}`,
 	borderRadius: "1rem",
 	padding: "1rem",
+	minWidth: "11rem",
 	maxWidth: "100%",
-	margin: "1rem",
 };
 
 export default InputBilinear;

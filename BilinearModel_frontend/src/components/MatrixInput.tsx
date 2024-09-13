@@ -13,12 +13,15 @@ const MatrixInput: React.FC<MatrixInputProps> = ({
 	parameterLabel,
 }) => {
 	const [matrix, setMatrix] = useState<string[][]>([]);
+
+	// Initialize the matrix to be NxN with default value "0"
 	useEffect(() => {
 		setMatrix(
 			Array.from({ length: N }, () => Array.from({ length: N }, () => "0"))
 		);
 	}, [N]);
 
+	// Handle updates to individual matrix elements
 	const handleMatrixChange = (row: number, col: number, value: string) => {
 		const updatedMatrix = matrix.map((r, ri) =>
 			ri === row ? r.map((c, ci) => (ci === col ? value : c)) : r
@@ -28,14 +31,15 @@ const MatrixInput: React.FC<MatrixInputProps> = ({
 	};
 
 	return (
-		<Grid container spacing={2} minWidth={"12rem"}>
+		<Grid container spacing={1} minWidth={"8rem"} justifyContent="center">
 			{matrix.map((row, rowIndex) => (
-				<Grid container item key={rowIndex} spacing={1}>
+				<React.Fragment key={rowIndex}>
 					{row.map((value, colIndex) => (
 						<Grid
 							item
 							key={`${rowIndex}-${colIndex}`}
-							sx={{ width: "6rem", margin: "0.25rem" }}
+							xs={12 / N} // Ensure equal columns in each row
+							sx={{ width: "5rem" }} // Adjust width of input
 						>
 							<TextField
 								label={`${parameterLabel}[${rowIndex}, ${colIndex}]`}
@@ -45,10 +49,19 @@ const MatrixInput: React.FC<MatrixInputProps> = ({
 									handleMatrixChange(rowIndex, colIndex, e.target.value)
 								}
 								variant="outlined"
+								InputProps={{
+									style: { fontSize: "0.6rem" }, // Make input text smaller
+								}}
+								InputLabelProps={{
+									style: { fontSize: "0.6rem" }, // Make label text smaller
+								}}
+								sx={{
+									minWidth: "4.5rem", // Optionally adjust the width
+								}}
 							/>
 						</Grid>
 					))}
-				</Grid>
+				</React.Fragment>
 			))}
 		</Grid>
 	);
