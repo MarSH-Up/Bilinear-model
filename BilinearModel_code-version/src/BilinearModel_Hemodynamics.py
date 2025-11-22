@@ -134,8 +134,6 @@ def Hemodynamics(Z, P_SD, Step):
     # Hemodynamics simulation
     for t in range(1, simulationLength):
         # 1. Signal Decay (s_dot)
-        # Matches MATLAB: f(:,2) = x(:,1) - sd.*x(:,2) - af.*(x(:,3) - 1);
-        # Note: x(:,3) is ln(f), so exp(x(:,3)) is f. Here fjin is already linear f.
         Sj_dot = Z[:, t - 1] - Kj * Sj[:, t - 1] - Yj * (fjin[:, t - 1] - 1)
 
         # 2. Inflow (f_dot)
@@ -146,9 +144,7 @@ def Hemodynamics(Z, P_SD, Step):
         # Steady state outflow component
         fv_s = Vj[:, t - 1] ** (1 / alpha)
 
-        # CORRECTION 1: Denominator is sum (Tj + Tjv), not product.
-        # CORRECTION 2: Do NOT divide by Vj (because we are in linear space).
-        # MATLAB: f(:,4) = (x(:,3) - fv_s)./((tt+tv).*x(:,4)); (Divides by v because x(:,4) is ln(v))
+        # (linear space).
         Vj_dot = (fjin[:, t - 1] - fv_s) / (Tj + Tjv)
 
         # Viscoelastic outflow (Tak Eq 5)
@@ -158,8 +154,6 @@ def Hemodynamics(Z, P_SD, Step):
         Efp = (1 - (1 - rho) ** (1 / fjin[:, t - 1])) / rho
 
         # 4. Deoxy-hemoglobin (q_dot)
-        # CORRECTION 3: Do NOT divide by qj (because we are in linear space).
-        # MATLAB: f(:,5) = (x(:,3).*ff - fv_d.*x(:,5)./x(:,4))./(tt.*x(:,5)); (Divides by q because x(:,5) is ln(q))
         # Tak Eq 4: Tau * q_dot = f_in * E/rho - f_out * q/v
         qj_dot = ((fjin[:, t - 1] * Efp) - (fjout * qj[:, t - 1] / Vj[:, t - 1])) / Tj
 
